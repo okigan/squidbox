@@ -31,11 +31,13 @@ RUN eatmydata make install
 #RUN date
 
 FROM ubuntu
-COPY --from=0 /usr/local /usr/local
+COPY --from=0 --chown=proxy:proxy /usr/local /usr/local
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update
-RUN apt-get install -y openssl ca-certificates
+RUN apt-get update && \
+    apt-get install -y openssl ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN echo "[ v3_ca ]" >> /etc/ssl/openssl.cnf
 RUN echo "keyUsage = cRLSign, keyCertSign" >> /etc/ssl/openssl.cnf
@@ -57,7 +59,6 @@ COPY root/ /
 RUN mkdir -p /usr/local/squid/var/logs/
 RUN /usr/local/squid/libexec/security_file_certgen -c -s /usr/local/squid/var/ssl_db -M 20MB
 
-RUN chown -R proxy:proxy /usr/local/squid/
 #RUN chown -R proxy:proxy /usr/local/squid/log/
 #RUN chown -R proxy:proxy /usr/local/squid/var/logs/ssl_db
 #RUN chown -R proxy:proxy /usr/local/squid/etc/ssl_cert/
