@@ -22,7 +22,8 @@ RUN ./configure --help
 RUN eatmydata ./configure \
     --with-default-user=proxy  \
     --with-openssl  \
-    --enable-ssl-crtd
+    --enable-ssl-crtd \
+    --disable-arch-native
 #    --prefix=/local/squid  \
 #    --with-logdir=/usr/local/squid/log/squid  \
 #    --with-pidfile=/usr/local/squid/run/squid.pid
@@ -83,7 +84,7 @@ EXPOSE 3128/tcp
 RUN cp /usr/local/squid/etc/ssl_cert/squid-self-signed.pem /usr/local/share/ca-certificates/squid-self-signed.crt
 RUN update-ca-certificates
 
-#CMD ["/usr/local/squid/sbin/squid", "-d", "10", "--foreground"]
+CMD ["/usr/local/squid/sbin/squid", "-d", "10", "--foreground"]
 
 
 
